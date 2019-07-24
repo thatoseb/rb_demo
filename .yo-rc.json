@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.sbk"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "monolith",
+    "baseName": "Robocop",
+    "packageName": "com.sbk",
+    "packageFolder": "com/sbk",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NTYxNmQzNGFkZGJmOWJhYTNlYzkyNDM0NzIyZWJkNzYyMDhiMGY0M2FkZGYyNDcxMzBiNmE0ZDRkOWQ4MjU5NTM4ZjI1ZjhiMDcwY2Q1ODIwNmFhYzM1MmQ1NTQ2OWMwYTljMjA0YTFkNjVjMzExNDI1MTQ0NmI0YTI4NzU0Njg=",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "testFrameworks": ["gatling"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false
+  }
+}
