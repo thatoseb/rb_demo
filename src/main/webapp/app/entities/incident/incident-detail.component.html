@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="incident">
+            <h2><span>Incident</span> {{incident.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Start Date</span></dt>
+                <dd>
+                    <span>{{incident.startDate}}</span>
+                </dd>
+                <dt><span>Incident Status</span></dt>
+                <dd>
+                    <span>{{incident.incidentStatus}}</span>
+                </dd>
+                <dt><span>Location</span></dt>
+                <dd>
+                    <span>{{incident.location}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{incident.description}}</span>
+                </dd>
+                <dt><span>Officer</span></dt>
+                <dd>
+                    <span *ngFor="let officer of incident.officers; let last = last">
+                        <a [routerLink]="['/officer', officer?.id, 'view' ]">{{officer.assignedTo}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Suspect</span></dt>
+                <dd>
+                    <span *ngFor="let suspect of incident.suspects; let last = last">
+                        <a [routerLink]="['/suspect', suspect?.id, 'view' ]">{{suspect.suspects}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{incident.userLogin}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/incident', incident.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

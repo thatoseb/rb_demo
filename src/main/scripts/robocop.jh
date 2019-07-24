@@ -1,0 +1,38 @@
+enum IncidentStatus {
+	OPEN, CLOSED
+}
+
+entity Incident {
+	startDate ZonedDateTime,
+    incidentStatus IncidentStatus,
+    location String,
+    description String
+}
+
+entity Officer {
+	firstName String,
+    lastName String,
+    identificationNumber String,
+    designation String
+}
+
+entity Suspect {
+	firstName String,
+    lastName String,
+    lastKnownAddress String,
+}
+
+relationship ManyToMany {
+	Incident{officer(assignedTo)} to Officer{assignedIncidents}
+
+}
+
+relationship ManyToMany {
+    Incident{suspect(suspects)} to Suspect{linkedIncidents}
+}
+
+dto * with mapstruct
+
+service all with serviceImpl
+
+paginate Incident, Officer, Suspect with pagination
