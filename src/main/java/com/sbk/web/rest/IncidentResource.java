@@ -1,5 +1,6 @@
 package com.sbk.web.rest;
 
+import com.sbk.domain.enumeration.IncidentStatus;
 import com.sbk.service.IncidentService;
 import com.sbk.web.rest.errors.BadRequestAlertException;
 import com.sbk.service.dto.IncidentDTO;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +61,9 @@ public class IncidentResource {
         if (incidentDTO.getId() != null) {
             throw new BadRequestAlertException("A new incident cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        incidentDTO.setIncidentStatus(IncidentStatus.OPEN);
+        incidentDTO.setStartDate(ZonedDateTime.now());
         IncidentDTO result = incidentService.save(incidentDTO);
         return ResponseEntity.created(new URI("/api/incidents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))

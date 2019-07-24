@@ -2,24 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { JhiAlertService } from 'ng-jhipster';
+import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 import { IIncident, Incident } from 'app/shared/model/incident.model';
 import { IncidentService } from './incident.service';
 import { IOfficer } from 'app/shared/model/officer.model';
 import { OfficerService } from 'app/entities/officer';
 import { ISuspect } from 'app/shared/model/suspect.model';
 import { SuspectService } from 'app/entities/suspect';
-import { IUser, UserService } from 'app/core';
+import { IUser, UserService, Account } from 'app/core';
+import { AccountService } from '../../core/auth/account.service';
 
 @Component({
   selector: 'jhi-incident-update',
   templateUrl: './incident-update.component.html'
 })
 export class IncidentUpdateComponent implements OnInit {
+  eventSubscriber: Subscription;
+
+  account: Account;
+
   isSaving: boolean;
 
   officers: IOfficer[];
@@ -46,6 +51,8 @@ export class IncidentUpdateComponent implements OnInit {
     protected suspectService: SuspectService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
+    protected accountService: AccountService,
+    protected eventManager: JhiEventManager,
     private fb: FormBuilder
   ) {}
 
@@ -75,6 +82,16 @@ export class IncidentUpdateComponent implements OnInit {
         map((response: HttpResponse<IUser[]>) => response.body)
       )
       .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
+
+    this.accountService.identity().then((account: Account) => {
+      this.account = account;
+
+      if (this.editForm.get(['id']).value === undefined) {
+        this.editForm.patchValue({ userId: this.account.id });
+      }
+    });
+
+    // this.editForm.patchValue({userId: this.account["login"]});
   }
 
   updateForm(incident: IIncident) {
@@ -108,9 +125,9 @@ export class IncidentUpdateComponent implements OnInit {
     return {
       ...new Incident(),
       id: this.editForm.get(['id']).value,
-      startDate:
-        this.editForm.get(['startDate']).value != null ? moment(this.editForm.get(['startDate']).value, DATE_TIME_FORMAT) : undefined,
-      incidentStatus: this.editForm.get(['incidentStatus']).value,
+      // startDate:
+      //   this.editForm.get(['startDate']).value != null ? moment(this.editForm.get(['startDate']).value, DATE_TIME_FORMAT) : undefined,
+      // incidentStatus: this.editForm.get(['incidentStatus']).value,
       location: this.editForm.get(['location']).value,
       description: this.editForm.get(['description']).value,
       officers: this.editForm.get(['officers']).value,
