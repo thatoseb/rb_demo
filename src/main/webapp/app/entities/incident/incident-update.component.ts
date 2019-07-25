@@ -91,6 +91,10 @@ export class IncidentUpdateComponent implements OnInit {
       }
     });
 
+    if (!this.accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
+      this.editForm.controls['incidentStatus'].disable();
+    }
+
     // this.editForm.patchValue({userId: this.account["login"]});
   }
 
