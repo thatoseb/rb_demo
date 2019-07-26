@@ -138,4 +138,22 @@ public class IncidentResource {
         incidentService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
+
+    @GetMapping("/incidents/users/{userId}")
+    public ResponseEntity<List<IncidentDTO>> getAllIncidents(Pageable pageable,
+                                                             @RequestParam MultiValueMap<String, String> queryParams,
+                                                             UriComponentsBuilder uriBuilder,
+                                                             @RequestParam(required = false, defaultValue = "false") boolean eagerload,
+                                                             @PathVariable Long userId) {
+        log.debug("REST request to get a page of Incidents");
+        Page<IncidentDTO> page;
+        if (eagerload) {
+            page = incidentService.findAllWithEagerRelationshipsByUser(pageable, userId);
+        } else {
+
+            page = incidentService.findAllByUser(pageable, userId);
+        }
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
 }

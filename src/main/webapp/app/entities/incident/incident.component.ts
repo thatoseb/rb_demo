@@ -10,6 +10,7 @@ import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { IncidentService } from './incident.service';
+import { Account } from '../../core/user/account.model';
 
 @Component({
   selector: 'jhi-incident',
@@ -61,6 +62,28 @@ export class IncidentComponent implements OnInit, OnDestroy {
       );
   }
 
+  loadAllByUser(userId: number) {
+    this.incidentService
+      .queryByUser(userId, {
+        page: this.page - 1,
+        size: this.itemsPerPage,
+        sort: this.sort()
+      })
+      .subscribe(
+        (res: HttpResponse<IIncident[]>) => this.paginateIncidents(res.body, res.headers),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
+
+  loadAllWhenNecessary() {
+    if (this.accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
+      this.loadAll();
+    } else {
+      this.accountService.identity().then((account: Account) => {
+        this.loadAllByUser(account.id);
+      });
+    }
+  }
   loadPage(page: number) {
     if (page !== this.previousPage) {
       this.previousPage = page;
@@ -76,7 +99,7 @@ export class IncidentComponent implements OnInit, OnDestroy {
         sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     });
-    this.loadAll();
+    this.loadAllWhenNecessary();
   }
 
   clear() {
@@ -88,11 +111,11 @@ export class IncidentComponent implements OnInit, OnDestroy {
         sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     ]);
-    this.loadAll();
+    this.loadAllWhenNecessary();
   }
 
   ngOnInit() {
-    this.loadAll();
+    this.loadAllWhenNecessary();
     this.accountService.identity().then(account => {
       this.currentAccount = account;
     });
@@ -108,7 +131,7 @@ export class IncidentComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInIncidents() {
-    this.eventSubscriber = this.eventManager.subscribe('incidentListModification', response => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe('incidentListModification', response => this.loadAllWhenNecessary());
   }
 
   sort() {

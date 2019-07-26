@@ -61,6 +61,14 @@ public class IncidentServiceImpl implements IncidentService {
             .map(incidentMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<IncidentDTO> findAllByUser(Pageable pageable, Long userId) {
+        log.debug("Request to get all Incidents");
+        return incidentRepository.findAllByUser(pageable, userId)
+            .map(incidentMapper::toDto);
+    }
+
     /**
      * Get all the incidents with eager load of many-to-many relationships.
      *
@@ -69,7 +77,12 @@ public class IncidentServiceImpl implements IncidentService {
     public Page<IncidentDTO> findAllWithEagerRelationships(Pageable pageable) {
         return incidentRepository.findAllWithEagerRelationships(pageable).map(incidentMapper::toDto);
     }
-    
+
+
+    public Page<IncidentDTO> findAllWithEagerRelationshipsByUser(Pageable pageable, Long userId) {
+        return incidentRepository.findAllWithEagerRelationshipsByUser(pageable, userId).map(incidentMapper::toDto);
+    }
+
 
     /**
      * Get one incident by id.
