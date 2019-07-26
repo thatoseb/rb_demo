@@ -129,9 +129,9 @@ export class IncidentUpdateComponent implements OnInit {
     return {
       ...new Incident(),
       id: this.editForm.get(['id']).value,
-      // startDate:
-      //   this.editForm.get(['startDate']).value != null ? moment(this.editForm.get(['startDate']).value, DATE_TIME_FORMAT) : undefined,
-      // incidentStatus: this.editForm.get(['incidentStatus']).value,
+      startDate:
+        this.editForm.get(['startDate']).value != null ? moment(this.editForm.get(['startDate']).value, DATE_TIME_FORMAT) : undefined,
+      incidentStatus: this.editForm.get(['incidentStatus']).value,
       location: this.editForm.get(['location']).value,
       description: this.editForm.get(['description']).value,
       officers: this.editForm.get(['officers']).value,
