@@ -1,6 +1,5 @@
 package com.sbk.web.rest;
 
-import com.sbk.domain.enumeration.IncidentStatus;
 import com.sbk.service.IncidentService;
 import com.sbk.web.rest.errors.BadRequestAlertException;
 import com.sbk.service.dto.IncidentDTO;
@@ -24,8 +23,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -61,9 +60,9 @@ public class IncidentResource {
         if (incidentDTO.getId() != null) {
             throw new BadRequestAlertException("A new incident cannot already have an ID", ENTITY_NAME, "idexists");
         }
-
-        incidentDTO.setIncidentStatus(IncidentStatus.OPEN);
-        incidentDTO.setStartDate(ZonedDateTime.now());
+        if (Objects.isNull(incidentDTO.getIncidentTypesId())) {
+            throw new BadRequestAlertException("Invalid association value provided", ENTITY_NAME, "null");
+        }
         IncidentDTO result = incidentService.save(incidentDTO);
         return ResponseEntity.created(new URI("/api/incidents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -137,23 +136,5 @@ public class IncidentResource {
         log.debug("REST request to delete Incident : {}", id);
         incidentService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
-    }
-
-    @GetMapping("/incidents/users/{userId}")
-    public ResponseEntity<List<IncidentDTO>> getAllIncidents(Pageable pageable,
-                                                             @RequestParam MultiValueMap<String, String> queryParams,
-                                                             UriComponentsBuilder uriBuilder,
-                                                             @RequestParam(required = false, defaultValue = "false") boolean eagerload,
-                                                             @PathVariable Long userId) {
-        log.debug("REST request to get a page of Incidents");
-        Page<IncidentDTO> page;
-        if (eagerload) {
-            page = incidentService.findAllWithEagerRelationshipsByUser(pageable, userId);
-        } else {
-
-            page = incidentService.findAllByUser(pageable, userId);
-        }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }

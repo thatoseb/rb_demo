@@ -9,13 +9,13 @@
                     <input type="text" class="form-control" id="id" name="id" formControlName="id"
                         readonly />
                 </div>
-                <div class="form-group" [hidden]="!editForm.get('id').value">
+                <div class="form-group">
                     <label class="form-control-label" for="field_startDate">Start Date</label>
                     <div class="d-flex">
                         <input id="field_startDate" type="datetime-local" class="form-control" name="startDate" formControlName="startDate" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
                 </div>
-                <div class="form-group" [hidden]="!editForm.get('id').value">
+                <div class="form-group">
                     <label class="form-control-label" for="field_incidentStatus">Incident Status</label>
                     <select class="form-control" name="incidentStatus" formControlName="incidentStatus" id="field_incidentStatus">
                         <option value="OPEN">OPEN</option>
@@ -33,13 +33,13 @@
                            formControlName="description"/>
                 </div>
 
-                <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                <div class="form-group">
                     <label for="field_officers">Officer</label>
                     <select class="form-control" id="field_officers" multiple name="officers" formControlName="officers">
                         <option [ngValue]="getSelected(editForm.get('officers').value, officerOption)" *ngFor="let officerOption of officers; trackBy: trackOfficerById">{{officerOption.assignedTo}}</option>
                     </select>
                 </div>
-                <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                <div class="form-group">
                     <label for="field_suspects">Suspect</label>
                     <select class="form-control" id="field_suspects" multiple name="suspects" formControlName="suspects">
                         <option [ngValue]="getSelected(editForm.get('suspects').value, suspectOption)" *ngFor="let suspectOption of suspects; trackBy: trackSuspectById">{{suspectOption.suspects}}</option>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_user">User</label>
-                    <select class="form-control" id="field_user" name="user" formControlName="userId" [attr.disabled]="true">
+                    <select class="form-control" id="field_user" name="user" formControlName="userId">
                         <option *ngIf="!editForm.get('userId').value" [ngValue]="null" selected></option>
                         <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
                     </select>
@@ -55,6 +55,19 @@
                 <div *ngIf="editForm.get('userId').invalid && (editForm.get('userId').dirty || editForm.get('userId').touched)">
                     <small class="form-text text-danger"
                            *ngIf="editForm.get('userId').errors.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_incidentTypes">Incident Types</label>
+                    <select class="form-control" id="field_incidentTypes" name="incidentTypes" formControlName="incidentTypesId">
+                        <option *ngIf="!editForm.get('incidentTypesId').value" [ngValue]="null" selected></option>
+                        <option [ngValue]="incidentTypesOption.id" *ngFor="let incidentTypesOption of incidenttypes; trackBy: trackIncidentTypesById">{{incidentTypesOption.type}}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('incidentTypesId').invalid && (editForm.get('incidentTypesId').dirty || editForm.get('incidentTypesId').touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('incidentTypesId').errors.required">
                         This field is required.
                     </small>
                 </div>

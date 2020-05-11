@@ -17,6 +17,8 @@ export interface IIncident {
   suspects?: ISuspect[];
   userLogin?: string;
   userId?: number;
+  incidentTypesType?: string;
+  incidentTypesId?: number;
 }
 
 export class Incident implements IIncident {
@@ -29,6 +31,8 @@ export class Incident implements IIncident {
     public officers?: IOfficer[],
     public suspects?: ISuspect[],
     public userLogin?: string,
-    public userId?: number
+    public userId?: number,
+    public incidentTypesType?: string,
+    public incidentTypesId?: number
   ) {}
 }

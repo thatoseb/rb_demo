@@ -1,63 +1,47 @@
 <div>
     <h2 id="page-heading">
-        <span>Incidents</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-incident" [routerLink]="['/incident/new']">
+        <span>Incident Types</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-incident-types" [routerLink]="['/incident-types/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span >
-            Create new Incident
+            Create new Incident Types
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="alert alert-warning" *ngIf="incidents?.length === 0">
-        <span>No incidents found</span>
+    <div class="alert alert-warning" *ngIf="incidentTypes?.length === 0">
+        <span>No incidentTypes found</span>
     </div>
-    <div class="table-responsive" *ngIf="incidents?.length > 0">
+    <div class="table-responsive" *ngIf="incidentTypes?.length > 0">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="startDate"><span>Start Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="incidentStatus"><span>Incident Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="location"><span>Location</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="userLogin"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="incidentTypesType"><span>Incident Types</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="type"><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let incident of incidents ;trackBy: trackId">
-                <td><a [routerLink]="['/incident', incident.id, 'view' ]">{{incident.id}}</a></td>
-                <td>{{incident.startDate | date:'medium'}}</td>
-                <td>{{incident.incidentStatus}}</td>
-                <td>{{incident.location}}</td>
-                <td>{{incident.description}}</td>
-                <td>
-                    {{incident.userLogin}}
-                </td>
-                <td>
-                    <div *ngIf="incident.incidentTypesId">
-                        <a [routerLink]="['../incident-types', incident.incidentTypesId , 'view' ]" >{{incident.incidentTypesType}}</a>
-                    </div>
-                </td>
+            <tr *ngFor="let incidentTypes of incidentTypes ;trackBy: trackId">
+                <td><a [routerLink]="['/incident-types', incidentTypes.id, 'view' ]">{{incidentTypes.id}}</a></td>
+                <td>{{incidentTypes.type}}</td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"
-                                [routerLink]="['/incident', incident.id, 'view' ]"
+                                [routerLink]="['/incident-types', incidentTypes.id, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/incident', incident.id, 'edit']"
+                                [routerLink]="['/incident-types', incidentTypes.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', 'incident', { outlets: { popup: incident.id + '/delete'} }]"
+                                [routerLink]="['/', 'incident-types', { outlets: { popup: incidentTypes.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
@@ -70,7 +54,7 @@
             </tbody>
         </table>
     </div>
-    <div [hidden]="incidents?.length === 0">
+    <div [hidden]="incidentTypes?.length === 0">
         <div class="row justify-content-center">
             <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>

@@ -5,19 +5,19 @@ import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { IIncident } from 'app/shared/model/incident.model';
+import { IIncidentTypes } from 'app/shared/model/incident-types.model';
 import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { IncidentService } from './incident.service';
+import { IncidentTypesService } from './incident-types.service';
 
 @Component({
-  selector: 'jhi-incident',
-  templateUrl: './incident.component.html'
+  selector: 'jhi-incident-types',
+  templateUrl: './incident-types.component.html'
 })
-export class IncidentComponent implements OnInit, OnDestroy {
+export class IncidentTypesComponent implements OnInit, OnDestroy {
   currentAccount: any;
-  incidents: IIncident[];
+  incidentTypes: IIncidentTypes[];
   error: any;
   success: any;
   eventSubscriber: Subscription;
@@ -31,7 +31,7 @@ export class IncidentComponent implements OnInit, OnDestroy {
   reverse: any;
 
   constructor(
-    protected incidentService: IncidentService,
+    protected incidentTypesService: IncidentTypesService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected accountService: AccountService,
@@ -49,14 +49,14 @@ export class IncidentComponent implements OnInit, OnDestroy {
   }
 
   loadAll() {
-    this.incidentService
+    this.incidentTypesService
       .query({
         page: this.page - 1,
         size: this.itemsPerPage,
         sort: this.sort()
       })
       .subscribe(
-        (res: HttpResponse<IIncident[]>) => this.paginateIncidents(res.body, res.headers),
+        (res: HttpResponse<IIncidentTypes[]>) => this.paginateIncidentTypes(res.body, res.headers),
         (res: HttpErrorResponse) => this.onError(res.message)
       );
   }
@@ -69,7 +69,7 @@ export class IncidentComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/incident'], {
+    this.router.navigate(['/incident-types'], {
       queryParams: {
         page: this.page,
         size: this.itemsPerPage,
@@ -82,7 +82,7 @@ export class IncidentComponent implements OnInit, OnDestroy {
   clear() {
     this.page = 0;
     this.router.navigate([
-      '/incident',
+      '/incident-types',
       {
         page: this.page,
         sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
@@ -96,19 +96,19 @@ export class IncidentComponent implements OnInit, OnDestroy {
     this.accountService.identity().then(account => {
       this.currentAccount = account;
     });
-    this.registerChangeInIncidents();
+    this.registerChangeInIncidentTypes();
   }
 
   ngOnDestroy() {
     this.eventManager.destroy(this.eventSubscriber);
   }
 
-  trackId(index: number, item: IIncident) {
+  trackId(index: number, item: IIncidentTypes) {
     return item.id;
   }
 
-  registerChangeInIncidents() {
-    this.eventSubscriber = this.eventManager.subscribe('incidentListModification', response => this.loadAll());
+  registerChangeInIncidentTypes() {
+    this.eventSubscriber = this.eventManager.subscribe('incidentTypesListModification', response => this.loadAll());
   }
 
   sort() {
@@ -119,10 +119,10 @@ export class IncidentComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected paginateIncidents(data: IIncident[], headers: HttpHeaders) {
+  protected paginateIncidentTypes(data: IIncidentTypes[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-    this.incidents = data;
+    this.incidentTypes = data;
   }
 
   protected onError(errorMessage: string) {

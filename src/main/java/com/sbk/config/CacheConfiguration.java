@@ -50,6 +50,7 @@ public class CacheConfiguration {
             createCache(cm, com.sbk.domain.Officer.class.getName() + ".assignedIncidents");
             createCache(cm, com.sbk.domain.Suspect.class.getName());
             createCache(cm, com.sbk.domain.Suspect.class.getName() + ".linkedIncidents");
+            createCache(cm, com.sbk.domain.IncidentTypes.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

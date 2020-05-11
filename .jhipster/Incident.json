@@ -28,6 +28,18 @@
             "otherEntityField": "login",
             "ownerSide": true,
             "otherEntityRelationshipName": "incident"
+        },
+        {
+            "relationshipName": "incidentTypes",
+            "otherEntityName": "incidentTypes",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "type",
+            "ownerSide": true,
+            "useJPADerivedIdentifier": true,
+            "otherEntityRelationshipName": "incident"
         }
     ],
     "fields": [

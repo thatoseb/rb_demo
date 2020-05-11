@@ -31,6 +31,10 @@ public class IncidentDTO implements Serializable {
 
     private String userLogin;
 
+    private Long incidentTypesId;
+
+    private String incidentTypesType;
+
     public Long getId() {
         return id;
     }
@@ -103,6 +107,22 @@ public class IncidentDTO implements Serializable {
         this.userLogin = userLogin;
     }
 
+    public Long getIncidentTypesId() {
+        return incidentTypesId;
+    }
+
+    public void setIncidentTypesId(Long incidentTypesId) {
+        this.incidentTypesId = incidentTypesId;
+    }
+
+    public String getIncidentTypesType() {
+        return incidentTypesType;
+    }
+
+    public void setIncidentTypesType(String incidentTypesType) {
+        this.incidentTypesType = incidentTypesType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -134,6 +154,8 @@ public class IncidentDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", user=" + getUserId() +
             ", user='" + getUserLogin() + "'" +
+            ", incidentTypes=" + getIncidentTypesId() +
+            ", incidentTypes='" + getIncidentTypesType() + "'" +
             "}";
     }
 }

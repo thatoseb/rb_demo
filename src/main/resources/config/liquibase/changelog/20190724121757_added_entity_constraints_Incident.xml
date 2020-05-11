@@ -38,5 +38,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 
+        <addForeignKeyConstraint baseColumnNames="id"
+                                 baseTableName="incident"
+                                 constraintName="fk_incident_incident_types_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="incident_types"/>
+
     </changeSet>
 </databaseChangeLog>

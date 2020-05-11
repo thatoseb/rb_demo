@@ -37,6 +37,12 @@
                 <dd>
                     {{incident.userLogin}}
                 </dd>
+                <dt><span>Incident Types</span></dt>
+                <dd>
+                    <div *ngIf="incident.incidentTypesId">
+                        <a [routerLink]="['/incident-types', incident.incidentTypesId, 'view']">{{incident.incidentTypesType}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

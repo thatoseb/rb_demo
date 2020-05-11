@@ -2,29 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
+import { JhiAlertService } from 'ng-jhipster';
 import { IIncident, Incident } from 'app/shared/model/incident.model';
 import { IncidentService } from './incident.service';
 import { IOfficer } from 'app/shared/model/officer.model';
 import { OfficerService } from 'app/entities/officer';
 import { ISuspect } from 'app/shared/model/suspect.model';
 import { SuspectService } from 'app/entities/suspect';
-import { IUser, UserService, Account } from 'app/core';
-import { AccountService } from '../../core/auth/account.service';
+import { IUser, UserService } from 'app/core';
+import { IIncidentTypes } from 'app/shared/model/incident-types.model';
+import { IncidentTypesService } from 'app/entities/incident-types';
 
 @Component({
   selector: 'jhi-incident-update',
   templateUrl: './incident-update.component.html'
 })
 export class IncidentUpdateComponent implements OnInit {
-  eventSubscriber: Subscription;
-
-  account: Account;
-
   isSaving: boolean;
 
   officers: IOfficer[];
@@ -32,6 +29,8 @@ export class IncidentUpdateComponent implements OnInit {
   suspects: ISuspect[];
 
   users: IUser[];
+
+  incidenttypes: IIncidentTypes[];
 
   editForm = this.fb.group({
     id: [],
@@ -41,7 +40,8 @@ export class IncidentUpdateComponent implements OnInit {
     description: [],
     officers: [],
     suspects: [],
-    userId: [null, Validators.required]
+    userId: [null, Validators.required],
+    incidentTypesId: [null, Validators.required]
   });
 
   constructor(
@@ -50,9 +50,8 @@ export class IncidentUpdateComponent implements OnInit {
     protected officerService: OfficerService,
     protected suspectService: SuspectService,
     protected userService: UserService,
+    protected incidentTypesService: IncidentTypesService,
     protected activatedRoute: ActivatedRoute,
-    protected accountService: AccountService,
-    protected eventManager: JhiEventManager,
     private fb: FormBuilder
   ) {}
 
@@ -82,20 +81,31 @@ export class IncidentUpdateComponent implements OnInit {
         map((response: HttpResponse<IUser[]>) => response.body)
       )
       .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
-
-    this.accountService.identity().then((account: Account) => {
-      this.account = account;
-
-      if (this.editForm.get(['id']).value === undefined) {
-        this.editForm.patchValue({ userId: this.account.id });
-      }
-    });
-
-    if (!this.accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
-      this.editForm.controls['incidentStatus'].disable();
-    }
-
-    // this.editForm.patchValue({userId: this.account["login"]});
+    this.incidentTypesService
+      .query({ filter: 'incident-is-null' })
+      .pipe(
+        filter((mayBeOk: HttpResponse<IIncidentTypes[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IIncidentTypes[]>) => response.body)
+      )
+      .subscribe(
+        (res: IIncidentTypes[]) => {
+          if (!!this.editForm.get('incidentTypesId').value) {
+            this.incidenttypes = res;
+          } else {
+            this.incidentTypesService
+              .find(this.editForm.get('incidentTypesId').value)
+              .pipe(
+                filter((subResMayBeOk: HttpResponse<IIncidentTypes>) => subResMayBeOk.ok),
+                map((subResponse: HttpResponse<IIncidentTypes>) => subResponse.body)
+              )
+              .subscribe(
+                (subRes: IIncidentTypes) => (this.incidenttypes = [subRes].concat(res)),
+                (subRes: HttpErrorResponse) => this.onError(subRes.message)
+              );
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
   }
 
   updateForm(incident: IIncident) {
@@ -107,7 +117,8 @@ export class IncidentUpdateComponent implements OnInit {
       description: incident.description,
       officers: incident.officers,
       suspects: incident.suspects,
-      userId: incident.userId
+      userId: incident.userId,
+      incidentTypesId: incident.incidentTypesId
     });
   }
 
@@ -136,7 +147,8 @@ export class IncidentUpdateComponent implements OnInit {
       description: this.editForm.get(['description']).value,
       officers: this.editForm.get(['officers']).value,
       suspects: this.editForm.get(['suspects']).value,
-      userId: this.editForm.get(['userId']).value
+      userId: this.editForm.get(['userId']).value,
+      incidentTypesId: this.editForm.get(['incidentTypesId']).value
     };
   }
 
@@ -165,6 +177,10 @@ export class IncidentUpdateComponent implements OnInit {
   }
 
   trackUserById(index: number, item: IUser) {
+    return item.id;
+  }
+
+  trackIncidentTypesById(index: number, item: IIncidentTypes) {
     return item.id;
   }
 

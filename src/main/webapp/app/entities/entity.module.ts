@@ -15,6 +15,10 @@ import { RouterModule } from '@angular/router';
       {
         path: 'suspect',
         loadChildren: './suspect/suspect.module#RobocopSuspectModule'
+      },
+      {
+        path: 'incident-types',
+        loadChildren: './incident-types/incident-types.module#RobocopIncidentTypesModule'
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

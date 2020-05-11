@@ -24,7 +24,6 @@ public class Incident implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "start_date")
@@ -58,6 +57,12 @@ public class Incident implements Serializable {
     @NotNull
     @JsonIgnoreProperties("incidents")
     private User user;
+
+    @OneToOne(optional = false)    @NotNull
+
+    @MapsId
+    @JoinColumn(name = "id")
+    private IncidentTypes incidentTypes;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -181,6 +186,19 @@ public class Incident implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public IncidentTypes getIncidentTypes() {
+        return incidentTypes;
+    }
+
+    public Incident incidentTypes(IncidentTypes incidentTypes) {
+        this.incidentTypes = incidentTypes;
+        return this;
+    }
+
+    public void setIncidentTypes(IncidentTypes incidentTypes) {
+        this.incidentTypes = incidentTypes;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

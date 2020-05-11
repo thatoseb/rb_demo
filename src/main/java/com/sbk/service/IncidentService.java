@@ -29,27 +29,12 @@ public interface IncidentService {
     Page<IncidentDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the incidents by user id.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<IncidentDTO> findAllByUser(Pageable pageable, Long userId);
-
-    /**
      * Get all the incidents with eager load of many-to-many relationships.
      *
      * @return the list of entities.
      */
     Page<IncidentDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
-     * Get all the incidents by user id with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    Page<IncidentDTO> findAllWithEagerRelationshipsByUser(Pageable pageable, Long userId);
-
+    
     /**
      * Get the "id" incident.
      *
